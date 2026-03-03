@@ -1,4 +1,4 @@
-//! High‑level decode entry points expected by your central dispatcher.
+//! High-level decode entry points expected by your central dispatcher.
 use crate::codecs::ply::{ascii as asc, binary as bin, header, types::*};
 use spatial_utils::{traits::SpatialSink, utils::point_scalar::PointScalar};
 use crate::BasicResult;
@@ -16,7 +16,7 @@ where
     let br = BufReader::new(cur);
     let (hdr, mut br) = header::read_header(br)?; // returns the same BufRead back after header
 
-    // Process elements in declared order to stay spec‑compliant.
+    // Process elements in declared order to stay spec-compliant.
     for elem in &hdr.elements {
         if elem.name == "vertex" {
             match hdr.encoding {

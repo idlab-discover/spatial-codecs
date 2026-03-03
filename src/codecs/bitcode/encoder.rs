@@ -1,6 +1,6 @@
 //! Bitcode encoder: serialises `Point3D` losslessly using the `bitcode` crate.
 //!
-//! The implementation is intentionally simple – it exists so other codecs can be wrapped
+//! The implementation is intentionally simple - it exists so other codecs can be wrapped
 //! without pulling in additional crates in higher layers.
 
 use bitcode::encode as bt_encode;

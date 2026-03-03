@@ -251,7 +251,7 @@ where
             Some(backing),
         )
     } else {
-        // Per-plane mode: decompress individually (2–3 streams).
+        // Per-plane mode: decompress individually (2-3 streams).
         let (plain_lo, pay_lo) = streams
             .get(&stream_id::POS_LO)
             .ok_or("sogp: missing pos_lo stream")?;

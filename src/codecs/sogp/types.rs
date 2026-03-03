@@ -61,7 +61,7 @@ pub struct SogpParams {
     /// Pack all planes into a single compressed stream (recommended).
     ///
     /// This is a major fast-path:
-    /// - one decompressor invocation instead of 2–3
+    /// - one decompressor invocation instead of 2-3
     /// - no per-stream framing overhead
     /// - better cross-plane compression
     #[serde(default = "d_true")]

@@ -1,4 +1,4 @@
-//! High‑performance writer. Minimal header + contiguous body. Supports ASCII, BLE, BBE.
+//! High-performance writer. Minimal header + contiguous body. Supports ASCII, BLE, BBE.
 use crate::codecs::ply::header::{write_minimal_header, WriteHeaderOpts};
 use crate::codecs::ply::types::*;
 use spatial_utils::traits::{ColorKind, SpatialKind, SpatialMeta, SpatialOwnedFull};

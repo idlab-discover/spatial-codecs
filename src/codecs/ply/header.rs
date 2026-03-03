@@ -155,7 +155,7 @@ pub fn write_minimal_header<W: Write>(mut w: W, opts: WriteHeaderOpts<'_>) -> io
             p.name
         )?;
     }
-    // We purposely omit other elements; many consumers expect vertex‑only point clouds.
+    // We purposely omit other elements; many consumers expect vertex-only point clouds.
     writeln!(w, "end_header")
 }
 

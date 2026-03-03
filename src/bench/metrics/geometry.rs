@@ -1,7 +1,7 @@
 //! Geometry-centric benchmark metrics.
 //!
 //! The routines in this module evaluate geometric fidelity between a decoded point set
-//! and a reference set. The implementation favours re-use of scratch buffers – benchmarks
+//! and a reference set. The implementation favours re-use of scratch buffers - benchmarks
 //! often run the same metric hundreds of times, and we want allocations to scale with the
 //! largest point set we encounter rather than each individual sweep.
 //!

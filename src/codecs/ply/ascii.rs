@@ -1,4 +1,4 @@
-//! ASCII payload reader/writer. Optimized for predictable per‑vertex lines.
+//! ASCII payload reader/writer. Optimized for predictable per-vertex lines.
 use spatial_utils::traits::{SpatialSink, SpatialView};
 use spatial_utils::{splat::SH_C0, utils::point_scalar::PointScalar};
 

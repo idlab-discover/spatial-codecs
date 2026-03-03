@@ -3,7 +3,7 @@ name = "spatial_codecs"
 version = "0.1.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
-#description = ""
+description = "High-throughput, format-agnostic encoding/decoding for spatial data (point clouds, Gaussian splats, …)"
 repository= "https://github.com/idlab-discover/spatial-codecs/"
 readme = "README.md"
 
@@ -23,7 +23,7 @@ name = "pc_tool"
 path = "src/main.rs"  # Points to the main.rs file
 
 [features]
-default = []
+default = ["draco"]
 # Default: accurate timings (no parallel). Turn on with: --features bench_parallel
 bench_parallel = ["rayon"]
 

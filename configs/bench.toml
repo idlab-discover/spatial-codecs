@@ -1,0 +1,206 @@
+[datasets]
+roots = ["Datasets/longdress/Ply"]
+
+[datasets.resample]
+strategy = "count"
+count = 100000
+
+[[sweeps]]
+name = "Bitcode"
+params = { Bitcode = {} }
+
+[[sweeps]]
+name = "Bitcode+Gzip"
+params = { Gzip = { inner = { Bitcode = {} } } }
+
+[[sweeps]]
+name = "Bitcode+Zstd"
+params = { Zstd = { level = 3, inner = { Bitcode = {} } } }
+
+[[sweeps]]
+name = "Bitcode+Lz4"
+params = { Lz4 = { inner = { Bitcode = {} } } }
+
+[[sweeps]]
+name = "Bitcode+Snappy"
+params = { Snappy = { inner = { Bitcode = {} } } }
+
+[[sweeps]]
+name = "Bitcode+openzl"
+params = { Openzl = { mode = "serial", inner = { Bitcode = {} } } }
+
+[[sweeps]]
+name = "Quantize@p16c8"
+params = { Quantize = { position_bits = 16, color_bits = 8, max_palette_colors = 0 } }
+
+[[sweeps]]
+name = "Quantize@p11c8"
+params = { Quantize = { position_bits = 11, color_bits = 8, max_palette_colors = 0 } }
+
+[[sweeps]]
+name = "Quantize@p8c8"
+params = { Quantize = { position_bits = 8, color_bits = 8, max_palette_colors = 0 } }
+
+[[sweeps]]
+name = "Quantize@p11c7"
+params = { Quantize = { position_bits = 11, color_bits = 7, max_palette_colors = 0 } }
+
+[[sweeps]]
+name = "Quantize@p11c8+cpallette"
+params = { Quantize = { position_bits = 11, color_bits = 8, max_palette_colors = 8192 } }
+
+[[sweeps]]
+name = "Quantize@p11c8+Zstd"
+params = { Zstd = { level = 3, inner = { Quantize = { position_bits = 11, color_bits = 8, max_palette_colors = 0 } } } }
+
+[[sweeps]]
+name = "Quantize@p11c8+delta+Zstd"
+params = { Zstd = { level = 3, inner = { Quantize = { position_bits = 11, color_bits = 8, max_palette_colors = 0, delta_positions = true, delta_colors = true } } } }
+
+[[sweeps]]
+name = "Quantize@p11c8+delta+nopack+Zstd"
+params = { Zstd = { level = 3, inner = { Quantize = { position_bits = 11, color_bits = 8, max_palette_colors = 0, delta_positions = true, delta_colors = true, pack_positions = false, pack_colors = false  } } } }
+
+[[sweeps]]
+name = "Quantize@p11c8+delta+nopack+openzl"
+params = { Openzl = { mode = "serial", inner = { Quantize = { position_bits = 11, color_bits = 8, max_palette_colors = 0, delta_positions = true, delta_colors = true, pack_positions = false, pack_colors = false  } } } }
+
+[[sweeps]]
+name = "Quantize@p11c8+openzl"
+params = { Openzl = { mode = "serial", inner = { Quantize = { position_bits = 11, color_bits = 8, max_palette_colors = 0 } } } }
+
+[[sweeps]]
+name = "OpenZL@Columnar(pack_rgb)"
+params = { Openzl = { mode = "columnar", pack_rgb = true } }
+
+[[sweeps]]
+name = "OpenZL@Columnar(split_rgb)"
+params = { Openzl = { mode = "columnar", pack_rgb = false } }
+
+[[sweeps]]
+name = "Draco@seq"
+params = { Draco = { method = "Sequential" } }
+
+[[sweeps]]
+name = "Draco@qp11"
+params = { Draco = { method = "KdTree", position_qp = 11 } }
+
+[[sweeps]]
+name = "TMF-default"
+params = { Tmf = {} }
+
+[[sweeps]]
+name = "TMF+Gzip"
+params = { Gzip = { level = 6, inner = { Tmf = {} } } }
+
+[[sweeps]]
+name = "PLY-ASCII"
+params = { Ply = { encoding = "Ascii" } }
+
+[[sweeps]]
+name = "PLY-BLE"
+params = { Ply = { encoding = "BinaryLittleEndian" } }
+
+[[sweeps]]
+name = "PLY-BBE"
+params = { Ply = { encoding = "BinaryBigEndian" } }
+
+# -------------------------
+# SOGP (internal compression)
+# -------------------------
+
+# Baselines: raw (no internal compression)
+[[sweeps]]
+name = "SOGP@p16-raw-packed+morton"
+params = { Sogp = { pos_bits = 16, include_color = true, packed_stream = true, morton_order = true, compression = { kind = "none" } } }
+
+[[sweeps]]
+name = "SOGP@p16-raw-packed-nomorton"
+params = { Sogp = { pos_bits = 16, include_color = true, packed_stream = true, morton_order = false, compression = { kind = "none" } } }
+
+[[sweeps]]
+name = "SOGP@p11-raw-packed+morton"
+params = { Sogp = { pos_bits = 11, include_color = true, packed_stream = true, morton_order = true, compression = { kind = "none" } } }
+
+[[sweeps]]
+name = "SOGP@p11-raw-packed-nomorton"
+params = { Sogp = { pos_bits = 11, include_color = true, packed_stream = true, morton_order = false, compression = { kind = "none" } } }
+
+
+# Zstd (level 1): main “fast + decent ratio” internal backend
+[[sweeps]]
+name = "SOGP@p16-zstd1-packed+morton"
+params = { Sogp = { pos_bits = 16, include_color = true, packed_stream = true, morton_order = true, compression = { kind = "zstd", level = 1 } } }
+
+[[sweeps]]
+name = "SOGP@p16-zstd1-packed-nomorton"
+params = { Sogp = { pos_bits = 16, include_color = true, packed_stream = true, morton_order = false, compression = { kind = "zstd", level = 1 } } }
+
+[[sweeps]]
+name = "SOGP@p16-zstd1-unpacked+morton"
+params = { Sogp = { pos_bits = 16, include_color = true, packed_stream = false, morton_order = true, compression = { kind = "zstd", level = 1 } } }
+
+[[sweeps]]
+name = "SOGP@p11-zstd1-packed+morton"
+params = { Sogp = { pos_bits = 11, include_color = true, packed_stream = true, morton_order = true, compression = { kind = "zstd", level = 1 } } }
+
+[[sweeps]]
+name = "SOGP@p11-zstd1-packed-nomorton"
+params = { Sogp = { pos_bits = 11, include_color = true, packed_stream = true, morton_order = false, compression = { kind = "zstd", level = 1 } } }
+
+[[sweeps]]
+name = "SOGP@p11-zstd1-unpacked+morton"
+params = { Sogp = { pos_bits = 11, include_color = true, packed_stream = false, morton_order = true, compression = { kind = "zstd", level = 1 } } }
+
+
+# Zstd (level 3): a “ratio leaning” point to compare quickly
+[[sweeps]]
+name = "SOGP@p16-zstd3-packed+morton"
+params = { Sogp = { pos_bits = 16, include_color = true, packed_stream = true, morton_order = true, compression = { kind = "zstd", level = 3 } } }
+
+[[sweeps]]
+name = "SOGP@p11-zstd3-packed+morton"
+params = { Sogp = { pos_bits = 11, include_color = true, packed_stream = true, morton_order = true, compression = { kind = "zstd", level = 3 } } }
+
+
+# LZ4: speed-oriented
+[[sweeps]]
+name = "SOGP@p16-lz4-packed+morton"
+params = { Sogp = { pos_bits = 16, include_color = true, packed_stream = true, morton_order = true, compression = { kind = "lz4" } } }
+
+[[sweeps]]
+name = "SOGP@p16-lz4-packed-nomorton"
+params = { Sogp = { pos_bits = 16, include_color = true, packed_stream = true, morton_order = false, compression = { kind = "lz4" } } }
+
+[[sweeps]]
+name = "SOGP@p11-lz4-packed+morton"
+params = { Sogp = { pos_bits = 11, include_color = true, packed_stream = true, morton_order = true, compression = { kind = "lz4" } } }
+
+
+# Snappy: speed-oriented (often slightly better than lz4 on some byte patterns)
+[[sweeps]]
+name = "SOGP@p16-snappy-packed+morton"
+params = { Sogp = { pos_bits = 16, include_color = true, packed_stream = true, morton_order = true, compression = { kind = "snappy" } } }
+
+[[sweeps]]
+name = "SOGP@p11-snappy-packed+morton"
+params = { Sogp = { pos_bits = 11, include_color = true, packed_stream = true, morton_order = true, compression = { kind = "snappy" } } }
+
+
+# OpenZL serial (internal): compare against the general OpenZL wrapper
+[[sweeps]]
+name = "SOGP@p16-openzl-serial-packed+morton"
+params = { Sogp = { pos_bits = 16, include_color = true, packed_stream = true, morton_order = true, compression = { kind = "openzl-serial" } } }
+
+[[sweeps]]
+name = "SOGP@p11-openzl-serial-packed+morton"
+params = { Sogp = { pos_bits = 11, include_color = true, packed_stream = true, morton_order = true, compression = { kind = "openzl-serial" } } }
+
+
+[metrics]
+symmetric = true
+k_normals = 16
+outlier_threshold = { kind = "mad3" }
+normal_angle = true
+d2 = true
+color_psnr = true

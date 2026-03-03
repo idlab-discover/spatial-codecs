@@ -1,0 +1,54 @@
+[package]
+name = "spatial_codecs"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+#description = ""
+repository= "https://github.com/idlab-discover/spatial-codecs/"
+readme = "README.md"
+
+[lib]
+crate-type = ["cdylib", "rlib", "staticlib"] # Allows you to build both a shared library and a Rust library
+
+[[bin]]
+name = "pc_bench"
+path = "src/bin/pc_bench.rs"
+
+[[bin]]
+name = "pc_generate_bindings"
+path = "src/bin/pc_generate_bindings.rs"
+
+[[bin]]
+name = "pc_tool"
+path = "src/main.rs"  # Points to the main.rs file
+
+[features]
+default = []
+# Default: accurate timings (no parallel). Turn on with: --features bench_parallel
+bench_parallel = ["rayon"]
+
+# Optional codec: enable with `--features draco`.
+draco = ["dep:spatial_codec_draco"]
+
+[dependencies]
+spatial_utils = "0.1.0"
+spatial_codec_draco = { version = "0.2.0", optional = true }
+clap = { version = "4.5", features = ["derive"] }
+bitcode = "0.6.3"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tmf = "0.2.1"
+kiddo = "5.2.2"
+nalgebra = "0.34.0"
+indicatif = "0.18.1"
+rayon = { version = "1.10.0", optional = true }
+toml = "0.9.8"
+rand = "0.9.2"
+flate2 = { version = "1.1.5", default-features = false , features = ["zlib-rs"] }
+zstd = { version = "0.13.3", default-features = true } 
+lz4_flex = "0.11"
+snap = "1.1"
+rust-openzl = "0.1.0"
+interoptopus = "0.14.27"
+interoptopus_backend_csharp = "0.14.25"
+interoptopus_backend_c = "0.14.25"

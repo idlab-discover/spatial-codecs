@@ -1,0 +1,5 @@
+target/**/*
+Cargo.lock
+bench_analysis.ipynb
+examples/csharp/obj/**/*
+examples/csharp/bin/**/*

@@ -293,6 +293,7 @@ fn write_stream_multi(
             }
             enc.flush()?;
         }
+        #[cfg(feature = "openzl")]
         SogpCompression::OpenzlSerial => {
             // OpenZL serial needs a contiguous buffer.
             let mut tmp = Vec::with_capacity(total_plain);
@@ -301,6 +302,10 @@ fn write_stream_multi(
             }
             let oz = rust_openzl::compress_serial(&tmp)?;
             out.extend_from_slice(&oz);
+        }
+        #[cfg(not(feature = "openzl"))]
+        SogpCompression::OpenzlSerial => {
+            return Err("OpenZL encoding not available (feature disabled)".into());
         }
     }
 

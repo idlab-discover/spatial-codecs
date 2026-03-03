@@ -149,6 +149,7 @@ fn decompress(comp: u8, payload: &[u8], expected: usize) -> Result<Vec<u8>, Stri
             }
             Ok(out)
         }
+        #[cfg(feature = "openzl")]
         comp_id::OPENZL_SERIAL => {
             let out = rust_openzl::decompress_serial(payload)
                 .map_err(|_| "sogp: openzl decompress failed".to_string())?;
@@ -156,6 +157,10 @@ fn decompress(comp: u8, payload: &[u8], expected: usize) -> Result<Vec<u8>, Stri
                 return Err("sogp: openzl stream length mismatch".into());
             }
             Ok(out)
+        }
+        #[cfg(not(feature = "openzl"))]
+        comp_id::OPENZL_SERIAL => {
+            Err("OpenZL decompression not available (feature disabled)".into())
         }
         _ => Err("sogp: unknown compression id".into()),
     }

@@ -89,10 +89,16 @@ fn supports_spatial_kind(params: &EncodingParams, kind: SpatialKind) -> bool {
             EncodingParams::Snappy { inner } => supports_spatial_kind(inner.as_ref(), kind),
 
             // OpenZL Serial is a wrapper over inner bytes -> propagate.
+            #[cfg(feature = "openzl")]
             EncodingParams::Openzl(crate::codecs::openzl::encoder::OpenzlParams::Serial {
                 inner,
                 ..
             }) => supports_spatial_kind(inner.as_ref(), kind),
+            #[cfg(not(feature = "openzl"))]
+            EncodingParams::Openzl(_) => {
+                // When OpenZL is disabled, we conservatively assume it could support splats.
+                true
+            }
 
             // Everything else cannot represent splat fields yet.
             _ => false,
@@ -127,7 +133,7 @@ fn push_chain(params: &EncodingParams, out: &mut Vec<EncodingFormat>) {
             out.push(EncodingFormat::Snappy);
             push_chain(inner.as_ref(), out);
         }
-
+        #[cfg(feature = "openzl")]
         EncodingParams::Openzl(p) => match p {
             crate::codecs::openzl::encoder::OpenzlParams::Serial { inner, .. } => {
                 out.push(EncodingFormat::Openzl);
@@ -137,6 +143,10 @@ fn push_chain(params: &EncodingParams, out: &mut Vec<EncodingFormat>) {
                 out.push(EncodingFormat::Openzl);
             }
         },
+        #[cfg(not(feature = "openzl"))]
+        EncodingParams::Openzl(_) => {
+            out.push(EncodingFormat::Openzl);
+        }
     }
 }
 
@@ -207,12 +217,16 @@ pub enum EncodingParams {
         inner: Box<EncodingParams>,
     } = 10,
     Sogp(crate::codecs::sogp::types::SogpParams) = 11,
+    #[cfg(feature = "openzl")]
     Openzl(crate::codecs::openzl::encoder::OpenzlParams) = 12,
+    #[cfg(not(feature = "openzl"))]
+    Openzl(()) = 12, // Placeholder when OpenZL is disabled
 }
 
 impl EncodingParams {
     #[inline]
     /// Return `true` when the variant wraps another codec (e.g. Gzip/Zstd).
+    #[cfg(feature = "openzl")]
     pub fn is_wrapper(&self) -> bool {
         matches!(
             self,
@@ -221,6 +235,16 @@ impl EncodingParams {
                 | Self::Lz4 { .. }
                 | Self::Snappy { .. }
                 | Self::Openzl(crate::codecs::openzl::encoder::OpenzlParams::Serial { .. })
+        )
+    }
+    #[cfg(not(feature = "openzl"))]
+    pub fn is_wrapper(&self) -> bool {
+        matches!(
+            self,
+            Self::Gzip { .. }
+                | Self::Zstd { .. }
+                | Self::Lz4 { .. }
+                | Self::Snappy { .. }
         )
     }
 }
@@ -260,8 +284,13 @@ pub fn get_default_params(format: EncodingFormat) -> EncodingParams {
             EncodingParams::Bitcode(crate::codecs::bitcode::encoder::BitcodeParams::default())
         }
         // Codecs that can be both standalone and a wrapper
+            #[cfg(feature = "openzl")]
         EncodingFormat::Openzl => {
             EncodingParams::Openzl(crate::codecs::openzl::encoder::OpenzlParams::columnar_default())
+        }
+        #[cfg(not(feature = "openzl"))]
+        EncodingFormat::Openzl => {
+            EncodingParams::Openzl(())
         }
         // The wrapper codecs
         EncodingFormat::Gzip => EncodingParams::Gzip {
@@ -322,8 +351,13 @@ where
             crate::codecs::sogp::encoder::encode_from_payload_into::<P, S>(payload, p, out)
         }
         // Codecs that can be both standalone and a wrapper
+        #[cfg(feature = "openzl")]
         EncodingParams::Openzl(p) => {
             crate::codecs::openzl::encoder::encode_from_payload_into(payload, p, out)
+        }
+        #[cfg(not(feature = "openzl"))]
+        EncodingParams::Openzl(_) => {
+            Err("OpenZL encoding not available (feature disabled)".into())
         }
         // The wrapper codecs
         EncodingParams::Gzip { inner, level } => crate::codecs::gzip::encoder::wrap_gzip_into(
@@ -518,6 +552,7 @@ mod spatial_kind_capability_tests {
         assert!(out.starts_with(b"SNP"));
     }
 
+    #[cfg(feature = "openzl")]
     #[test]
     fn splats_rejected_by_openzl_columnar() {
         let splats = vec![GaussianSplatF32::new(

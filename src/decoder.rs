@@ -9,10 +9,12 @@ use crate::BasicResult;
 use spatial_utils::{point::Point3D, traits::SpatialSink, utils::point_scalar::PointScalar};
 
 use crate::codecs::{
-    bitcode as bitcodeCodec, gsplat16, gzip, lz4, openzl, ply, quantize, snappy, sogp, tmf, zstd,
+    bitcode as bitcodeCodec, gsplat16, gzip, lz4, ply, quantize, snappy, sogp, tmf, zstd,
 };
 #[cfg(feature = "draco")]
 use crate::codecs::draco;
+#[cfg(feature = "openzl")]
+use crate::codecs::openzl;
 
 #[inline(always)]
 fn magic3(data: &[u8]) -> Result<&[u8; 3], Box<dyn std::error::Error>> {
@@ -41,7 +43,10 @@ where
         b"QNT" => quantize::decoder::decode_into(data, out),
         b"SGP" => sogp::decoder::decode_into(data, out),
         // Codecs that can be both standalone and a wrapper
+        #[cfg(feature = "openzl")]
         b"OZL" => openzl::decoder::decode_into(data, out),
+        #[cfg(not(feature = "openzl"))]
+        b"OZL" => Err("OpenZL decoding not available (feature disabled)".into()),
         // The wrapper codecs
         b"GZP" => gzip::decoder::decode_into(data, out),
         b"ZST" => zstd::decoder::decode_into(data, out),
@@ -77,7 +82,10 @@ where
         b"QNT" => quantize::decoder::decode_into_flattened_vecs(data, pos_out, color_out),
         b"SGP" => sogp::decoder::decode_into_flattened_vecs(data, pos_out, color_out),
         // Codecs that can be both standalone and a wrapper
+        #[cfg(feature = "openzl")]
         b"OZL" => openzl::decoder::decode_into_flattened_vecs(data, pos_out, color_out),
+        #[cfg(not(feature = "openzl"))]
+        b"OZL" => Err("OpenZL decoding not available (feature disabled)".into()),
         // The wrapper codecs
         b"GZP" => gzip::decoder::decode_into_flattened_vecs(data, pos_out, color_out),
         b"ZST" => zstd::decoder::decode_into_flattened_vecs(data, pos_out, color_out),

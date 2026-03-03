@@ -12,6 +12,7 @@ pub mod draco;
 pub mod gsplat16;
 pub mod gzip;
 pub mod lz4;
+#[cfg(feature = "openzl")]
 pub mod openzl;
 pub mod ply;
 pub mod quantize;

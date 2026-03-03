@@ -452,6 +452,7 @@ fn codec_chain_label(params: &EncodingParams) -> String {
                 out.push("snappy");
                 push_chain(inner.as_ref(), out);
             }
+            #[cfg(feature = "openzl")]
             EncodingParams::Openzl(p) => {
                 out.push("openzl");
                 if let spatial_codecs::codecs::openzl::encoder::OpenzlParams::Serial {
@@ -461,6 +462,10 @@ fn codec_chain_label(params: &EncodingParams) -> String {
                 {
                     push_chain(inner.as_ref(), out);
                 }
+            }
+            #[cfg(not(feature = "openzl"))]
+            EncodingParams::Openzl(_) => {
+                out.push("openzl");
             }
         }
     }

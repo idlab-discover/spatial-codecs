@@ -1,6 +1,6 @@
 [package]
 name = "spatial_codecs"
-version = "0.2.3"
+version = "0.2.4"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 description = "High-throughput, format-agnostic encoding/decoding for spatial data (point clouds, Gaussian splats, …)"
@@ -33,7 +33,7 @@ openzl = ["dep:rust-openzl"]
 
 [dependencies]
 spatial_utils = "0.1.0"
-spatial_codec_draco = { version = "0.2.4", optional = true }
+spatial_codec_draco = { version = "0.2.5", optional = true }
 clap = { version = "4.5", features = ["derive"] }
 bitcode = "0.6.3"
 serde = { version = "1", features = ["derive"] }
